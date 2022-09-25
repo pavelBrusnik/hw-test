@@ -9,6 +9,9 @@ import (
 var ErrInvalidString = errors.New("invalid string")
 
 func Unpack(s string) (string, error) {
+	if len(s) == 0 {
+		return "", nil
+	}
 	sb := strings.Builder{}
 	runes, err := filterAndConvert(s)
 	if err != nil {
@@ -36,9 +39,6 @@ func Unpack(s string) (string, error) {
 
 func filterAndConvert(s string) ([]rune, error) {
 	runes := []rune(s)
-	if len(runes) == 0 {
-		return []rune{}, nil
-	}
 	if unicode.IsDigit(runes[0]) {
 		return []rune{}, ErrInvalidString
 	}
