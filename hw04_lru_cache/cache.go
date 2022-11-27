@@ -62,7 +62,6 @@ func (c *cache) Set(k Key, v interface{}) bool {
 
 func (c *cache) Get(key Key) (interface{}, bool) {
 	c.mutex.Lock()
-
 	defer c.mutex.Unlock()
 
 	if item, ok := c.items[key]; ok {
