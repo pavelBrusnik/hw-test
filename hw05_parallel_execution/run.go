@@ -6,8 +6,10 @@ import (
 	"sync/atomic"
 )
 
-var ErrErrorsLimitExceeded = errors.New("errors limit exceeded")
-var wg = &sync.WaitGroup{}
+var (
+	ErrErrorsLimitExceeded = errors.New("errors limit exceeded")
+	wg                     = &sync.WaitGroup{}
+)
 
 type Task func() error
 
