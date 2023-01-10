@@ -7,6 +7,7 @@ import (
 )
 
 var ErrErrorsLimitExceeded = errors.New("errors limit exceeded")
+var wg = &sync.WaitGroup{}
 
 type Task func() error
 
@@ -17,7 +18,6 @@ func Run(tasks []Task, n, m int) (e error) {
 	}
 
 	var errorsCount int64
-	wg := &sync.WaitGroup{}
 	wg.Add(n)
 	tasksChan := make(chan Task, len(tasks)+1)
 
@@ -27,7 +27,7 @@ func Run(tasks []Task, n, m int) (e error) {
 	close(tasksChan)
 
 	for i := 0; i < n; i++ {
-		go process(wg, tasksChan, &errorsCount, m)
+		go process(tasksChan, &errorsCount, m)
 	}
 
 	wg.Wait()
@@ -39,7 +39,7 @@ func Run(tasks []Task, n, m int) (e error) {
 	return e
 }
 
-func process(wg *sync.WaitGroup, tasksChan chan Task, errorsCount *int64, m int) {
+func process(tasksChan chan Task, errorsCount *int64, m int) {
 	defer wg.Done()
 
 	for task := range tasksChan {

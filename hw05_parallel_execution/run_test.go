@@ -70,13 +70,11 @@ func TestRun(t *testing.T) {
 
 	t.Run("without worker", func(t *testing.T) {
 		err := Run(nil, 0, 1)
-
-		require.Truef(t, errors.Is(err, ErrErrorsLimitExceeded), "actual err - %v", err)
+		require.ErrorIs(t, err, ErrErrorsLimitExceeded)
 	})
 
 	t.Run("zero errors", func(t *testing.T) {
 		err := Run(nil, 0, 0)
-
-		require.Truef(t, errors.Is(err, ErrErrorsLimitExceeded), "actual err - %v", err)
+		require.ErrorIs(t, err, ErrErrorsLimitExceeded)
 	})
 }
