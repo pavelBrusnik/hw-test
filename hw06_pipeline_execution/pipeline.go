@@ -12,7 +12,7 @@ func ExecutePipeline(in In, done In, stages ...Stage) Out {
 	out := do(in, done)
 	for _, stage := range stages {
 		if stage != nil {
-			out = stage(do(out, done))
+			out = do(stage(out), done)
 		} else {
 			panic("stage is nil!")
 		}
