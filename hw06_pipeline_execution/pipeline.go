@@ -5,18 +5,21 @@ type (
 	Out = In
 	Bi  = chan interface{}
 )
-
 type Stage func(in In) (out Out)
 
 func ExecutePipeline(in In, done In, stages ...Stage) Out {
+	for _, stage := range stages {
+		in = stage(do(in, done))
+	}
+
+	return in
+}
+
+func do(in In, done In) Out {
 	out := make(Bi)
+
 	go func() {
 		defer close(out)
-		for _, stage := range stages {
-			if stage != nil {
-				in = stage(in)
-			}
-		}
 		for {
 			select {
 			case <-done:
@@ -25,7 +28,11 @@ func ExecutePipeline(in In, done In, stages ...Stage) Out {
 				if !ok {
 					return
 				}
-				out <- v
+				select {
+				case <-done:
+					return
+				case out <- v:
+				}
 			}
 		}
 	}()
