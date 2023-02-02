@@ -129,18 +129,4 @@ func TestPipeline(t *testing.T) {
 
 		require.Equal(t, data, result)
 	})
-
-	t.Run("stage nil", func(t *testing.T) {
-		in := make(Bi)
-		data := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
-
-		go func() {
-			for _, v := range data {
-				in <- v
-			}
-			close(in)
-		}()
-
-		require.Panics(t, func() { ExecutePipeline(in, nil, nil) })
-	})
 }
